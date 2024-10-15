@@ -1,5 +1,5 @@
 
-# Standard Taskphase -1
-Heyo, this is a repo for all the linux luminarium modules from pwn.college.
+# Heyo
+This repo is for all of Cryptonite's Taskphases.
 
-This is the first part of cryptonite's taskphase.
+* __Taskphase-1__ includes all Linux Luminarium modules from pwn.college
