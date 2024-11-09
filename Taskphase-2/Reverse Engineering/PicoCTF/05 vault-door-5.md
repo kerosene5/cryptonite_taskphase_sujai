@@ -1,0 +1,88 @@
+# vault-door-5.md
+__Flag__:`picoCTF{c0nv3rt1ng_fr0m_ba5e_64_0b957c4f}`
+
+__Solutions__: The next sequal to vault-door series, we have been given a very fun challenge:
+
+
+* Source Code
+```
+import java.net.URLDecoder;
+import java.util.*;
+
+class VaultDoor5 {
+    public static void main(String args[]) {
+        VaultDoor5 vaultDoor = new VaultDoor5();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+	if (vaultDoor.checkPassword(input)) {
+	    System.out.println("Access granted.");
+	} else {
+	    System.out.println("Access denied!");
+        }
+    }
+
+    // Minion #7781 used base 8 and base 16, but this is base 64, which is
+    // like... eight times stronger, right? Riiigghtt? Well that's what my twin
+    // brother Minion #2415 says, anyway.
+    //
+    // -Minion #2414
+    public String base64Encode(byte[] input) {
+        return Base64.getEncoder().encodeToString(input);
+    }
+
+    // URL encoding is meant for web pages, so any double agent spies who steal
+    // our source code will think this is a web site or something, defintely not
+    // vault door! Oh wait, should I have not said that in a source code
+    // comment?
+    //
+    // -Minion #2415
+    public String urlEncode(byte[] input) {
+        StringBuffer buf = new StringBuffer();
+        for (int i=0; i<input.length; i++) {
+            buf.append(String.format("%%%2x", input[i]));
+        }
+        return buf.toString();
+    }
+
+    public boolean checkPassword(String password) {
+        String urlEncoded = urlEncode(password.getBytes());
+        String base64Encoded = base64Encode(urlEncoded.getBytes());
+        String expected = "JTYzJTMwJTZlJTc2JTMzJTcyJTc0JTMxJTZlJTY3JTVm"
+                        + "JTY2JTcyJTMwJTZkJTVmJTYyJTYxJTM1JTY1JTVmJTM2"
+                        + "JTM0JTVmJTMwJTYyJTM5JTM1JTM3JTYzJTM0JTY2";
+        return base64Encoded.equals(expected);
+    }
+}
+```
+
+Okay, so now by reading the source code we can figure out that that password is first encoded in the `URL` format and then again encoded in `Base64`.
+
+Now, we can solve this challenge by taking the encoded string, using a Base64 decoder and then providing the result to a URL decoder in order to the flag.
+
+I made a simple script to accomplish this:
+```
+import java.util.Base64;
+import java.net.URLDecoder;
+
+public class VaultDoor5Solver {
+    public static void main(String[] args) throws Exception {
+        // Step 1: Decode the base64 string
+        String base64Encoded = "JTYzJTMwJTZlJTc2JTMzJTcyJTc0JTMxJTZlJTY3JTVm"
+                             + "JTY2JTcyJTMwJTZkJTVmJTYyJTYxJTM1JTY1JTVmJTM2"
+                             + "JTM0JTVmJTMwJTYyJTM5JTM1JTM3JTYzJTM0JTY2";
+        byte[] urlEncodedBytes = Base64.getDecoder().decode(base64Encoded);
+        
+        // Step 2: Convert URL-encoded bytes back to a string and decode URL encoding
+        String urlEncoded = new String(urlEncodedBytes);
+        String password = URLDecoder.decode(urlEncoded, "UTF-8");
+        
+        System.out.println("picoCTF{" + password + "}");
+    }
+}
+```
+
+Output:
+
+<img width="556" alt="{CF24B104-F503-4E50-A57C-E6796BEAE59E}" src="https://github.com/user-attachments/assets/1c8cc75a-386e-493c-995b-a3731d1f20d0">
