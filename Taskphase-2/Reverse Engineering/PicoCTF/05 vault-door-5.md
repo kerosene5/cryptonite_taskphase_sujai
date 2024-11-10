@@ -1,8 +1,7 @@
 # vault-door-5.md
 __Flag__:`picoCTF{c0nv3rt1ng_fr0m_ba5e_64_0b957c4f}`
 
-__Solutions__: The next sequel to the vault-door series, we have been given a very fun challenge:
-
+__Solutions__: The next sequel to the vault-door series, we have been given a very fun challenge.
 
 * Source Code
 ```
