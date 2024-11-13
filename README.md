@@ -1,6 +1,6 @@
 
-# Heyo
-This repo is for all of Cryptonite's Taskphases.
+# Heyo (got removed)
+This repo is for all of Cryptonite's Taskphases (failed now).
 
 * __Taskphase-1__ includes all Linux Luminarium modules from pwn.college
 
